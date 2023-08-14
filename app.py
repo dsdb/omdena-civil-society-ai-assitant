@@ -7,7 +7,7 @@ st.set_page_config(page_title="Omdena Civil Society Online Assitant")
 
 # Set Credentials
 user = st.secrets['USER']
-token = st.secrets['PASS']
+token = st.secrets['TOKEN']
 
 # Store responses
 if "messages" not in st.session_state.keys():
