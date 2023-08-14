@@ -6,8 +6,8 @@ from hugchat.login import Login
 st.set_page_config(page_title="Omdena Civil Society Online Assitant")
 
 # Set Credentials
-usr_email = st.secrets['EMAIL']
-usr_passwd = st.secrets['PASS']
+user = st.secrets['USER']
+token = st.secrets['PASS']
 
 # Store responses
 if "messages" not in st.session_state.keys():
@@ -18,16 +18,14 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 
-def get_response(usr_input, usr_email, usr_passwd):
-    # Hugging Face Login
-    sign = Login(usr_email, usr_passwd)
-    cookies = sign.login()
-    # Instantiat the Bot                       
+def get_response(usr_input, usr_email, usr_passwd):    
+    sign = Login(user, token)
+    cookies = sign.login()                      
     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
     return chatbot.chat(usr_input)  
 
 # User query
-if user_query := st.chat_input(disabled=not (usr_email and usr_passwd)):
+if user_query := st.chat_input(disabled=not (user and token)):
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
         st.write(user_query)        
@@ -35,7 +33,7 @@ if user_query := st.chat_input(disabled=not (usr_email and usr_passwd)):
 # Response
 if st.session_state.messages[-1]["role"] != "Omdena assistant":
     with st.chat_message("Omdena assistant"):        
-            response = get_response(user_query, usr_email, usr_passwd) 
+            response = get_response(user_query, user, token) 
             st.write(response) 
     message = {"role": "Omdena assistant", "content": response}
     st.session_state.messages.append(message)
